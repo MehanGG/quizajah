@@ -1,0 +1,1870 @@
+```html
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <title>Quiz Kimia 2026 — Persiapan Penilaian Akhir Kimia Fase E</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Global Anti-Select, Anti-Hold & Anti-Zoom Protection (Safe for Button Clicks) */
+    *, *::before, *::after, html, body {
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
+      user-select: none !important;
+      -webkit-touch-callout: none !important;
+      -webkit-user-drag: none !important;
+      touch-action: manipulation;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-y: auto;
+    }
+
+    button, a, input, label, [role="button"] {
+      touch-action: manipulation;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Utility to strictly hide floating dock when not in quiz */
+    .dock-hidden {
+      display: none !important;
+      pointer-events: none !important;
+      visibility: hidden !important;
+    }
+
+    /* Custom Gamified Styling & Micro-interactions */
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0b0f19;
+      background-image: 
+        radial-gradient(at 15% 15%, rgba(124, 58, 237, 0.18) 0px, transparent 45%),
+        radial-gradient(at 85% 20%, rgba(14, 165, 233, 0.16) 0px, transparent 45%),
+        radial-gradient(at 50% 85%, rgba(16, 185, 129, 0.12) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: #f8fafc;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    /* Subtle chemistry grid pattern */
+    .bg-grid-pattern {
+      background-size: 36px 36px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Quizziz-style 3D tactile option cards */
+    .option-card {
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border-bottom-width: 4px;
+    }
+    .option-card:hover:not(:disabled) {
+      transform: translateY(-3px);
+    }
+    .option-card:active:not(:disabled) {
+      transform: translateY(1px);
+      border-bottom-width: 2px;
+    }
+
+    /* Primary 3D CTA Button */
+    .btn-3d-primary {
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 6px 0 #4338ca, 0 12px 24px -4px rgba(99, 102, 241, 0.5);
+    }
+    .btn-3d-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 #4338ca, 0 16px 30px -4px rgba(99, 102, 241, 0.65);
+    }
+    .btn-3d-primary:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #4338ca, 0 6px 12px -2px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Next Button 3D */
+    .btn-3d-next {
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 5px 0 #047857, 0 10px 20px -4px rgba(16, 185, 129, 0.45);
+    }
+    .btn-3d-next:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 #047857, 0 14px 24px -4px rgba(16, 185, 129, 0.6);
+    }
+    .btn-3d-next:active:not(:disabled) {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #047857;
+    }
+
+    /* Atomic Isotope/Nuclide stacked notation helper */
+    .nuclide {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: middle;
+      font-size: 0.72em;
+      line-height: 1.05;
+      text-align: right;
+      margin-right: 1px;
+      font-weight: 700;
+    }
+    .nuclide sup, .nuclide sub {
+      font-size: 1em;
+      line-height: 1;
+      position: static;
+    }
+
+    /* Smooth Entrance Animations */
+    @keyframes slideUpFade {
+      0% {
+        opacity: 0;
+        transform: translateY(18px) scale(0.985);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .animate-question-in {
+      animation: slideUpFade 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+    }
+    .animate-float {
+      animation: floatSlow 4s ease-in-out infinite;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-grid-pattern flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+  <!-- Confetti Canvas Overlay for Result Celebration -->
+  <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-50 hidden"></canvas>
+
+  <!-- Top Ambient Navigation / Status Header -->
+  <header class="w-full border-b border-slate-800/80 bg-slate-900/75 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <!-- Brand Logo -->
+      <div id="brand-home-trigger" class="flex items-center gap-3 cursor-pointer group" onclick="window.confirmReturnHome()">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-teal-400 p-[2px] shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+            <i class="fa-solid fa-flask-vial text-transparent bg-clip-text bg-gradient-to-tr from-indigo-400 to-teal-300 text-lg"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-base sm:text-lg tracking-tight text-white">Quiz Kimia</span>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">2026</span>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">23 Soal Prediksi Kimia Fase E</p>
+        </div>
+      </div>
+
+      <!-- Right Controls: Live Stats (During Quiz) & Audio Controls -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- In-Quiz Live Stats Pill -->
+        <div id="header-quiz-stats" class="hidden items-center gap-2 sm:gap-3 bg-slate-800/90 border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs sm:text-sm font-semibold">
+          <div class="flex items-center gap-1.5 text-amber-400" title="Streak Jawaban Benar Beruntun">
+            <i class="fa-solid fa-fire-flame-curved"></i>
+            <span id="live-streak">0</span>
+          </div>
+          <div class="h-3.5 w-[1px] bg-slate-700"></div>
+          <div class="flex items-center gap-1.5 text-emerald-400" title="Poin Quiz">
+            <i class="fa-solid fa-bolt"></i>
+            <span id="live-points">0</span>
+          </div>
+          <div class="h-3.5 w-[1px] bg-slate-700"></div>
+          <div class="flex items-center gap-1.5 text-slate-300 font-mono" title="Waktu Pengerjaan">
+            <i class="fa-regular fa-clock text-indigo-400"></i>
+            <span id="live-timer">00:00</span>
+          </div>
+        </div>
+
+        <!-- Background Music (BGM) Toggle Button -->
+        <button id="btn-bgm-toggle" type="button" onclick="window.toggleMusic()" class="h-10 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/70 flex items-center justify-center gap-1.5 text-slate-300 hover:text-white transition-colors cursor-pointer" title="Aktifkan/Matikan Musik Latar">
+          <i id="icon-bgm" class="fa-solid fa-music text-teal-400 text-sm"></i>
+          <span id="label-bgm" class="text-[11px] font-bold hidden sm:inline text-teal-300">Musik: ON</span>
+        </button>
+
+        <!-- Sound Effect (SFX) Button -->
+        <button id="btn-sound-toggle" type="button" onclick="window.toggleSfx()" class="h-10 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/70 flex items-center justify-center gap-1.5 text-slate-300 hover:text-white transition-colors cursor-pointer" title="Aktifkan/Matikan Efek Suara Klik">
+          <i id="icon-sound" class="fa-solid fa-volume-high text-indigo-400 text-sm"></i>
+          <span id="label-sfx" class="text-[11px] font-bold hidden sm:inline text-indigo-300">SFX: ON</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow flex flex-col justify-start w-full max-w-4xl mx-auto px-4 sm:px-6 pt-5 pb-44 sm:py-8">
+
+    <!-- ==========================================
+         1. START SCREEN (HERO)
+    =========================================== -->
+    <section id="screen-start" class="w-full animate-question-in">
+      <div class="relative rounded-3xl bg-slate-900/85 border border-slate-800/90 shadow-2xl shadow-indigo-950/40 backdrop-blur-xl p-6 sm:p-10 md:p-12 overflow-hidden">
+        
+        <!-- Decorative Background Glows -->
+        <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-teal-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="relative z-10 flex flex-col items-center text-center">
+          <!-- Top Badge -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs sm:text-sm font-semibold mb-6">
+            <span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span>
+            <span>23 Soal Prediksi Kimia Fase E</span>
+          </div>
+
+          <!-- Floating Chemistry Emblem -->
+          <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-teal-400 p-0.5 shadow-xl shadow-indigo-500/25 mb-6 animate-float">
+            <div class="w-full h-full bg-slate-950/90 rounded-[22px] flex items-center justify-center relative">
+              <i class="fa-solid fa-atom text-4xl sm:text-5xl text-transparent bg-clip-text bg-gradient-to-tr from-indigo-400 via-purple-300 to-teal-300"></i>
+              <span class="absolute -bottom-2 -right-2 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500 text-slate-950 rounded-md shadow">Fase E</span>
+            </div>
+          </div>
+
+          <!-- Requested Hero Title: Quiz Kimia \n 2026 -->
+          <h1 class="font-display font-extrabold tracking-tight leading-none mb-3">
+            <span class="block text-4xl sm:text-6xl md:text-7xl text-white drop-shadow-sm">Quiz Kimia</span>
+            <span class="block text-5xl sm:text-7xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-teal-400 mt-1">2026</span>
+          </h1>
+
+          <p class="text-slate-300 text-sm sm:text-base max-w-xl mt-3 leading-relaxed">
+            Uji penguasaan materi Kimia melalui <strong class="text-white">23 butir soal prediksi pilihan ganda (A–E)</strong> interaktif satu per satu bergaya <em>Quizziz</em>, lengkap dengan evaluasi skor, jawaban kita vs kunci jawaban, dan pembahasan detail di akhir sesi.
+          </p>
+
+          <!-- Topic Coverage Chips -->
+          <div class="w-full max-w-2xl mt-7">
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">6 Cakupan Materi Kisi-Kisi (23 Soal):</p>
+            <div class="flex flex-wrap justify-center gap-2">
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700/80 text-xs font-medium text-slate-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-microscope text-indigo-400"></i> Metode Ilmiah & Lab
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700/80 text-xs font-medium text-slate-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-leaf text-emerald-400"></i> Kimia Hijau
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700/80 text-xs font-medium text-slate-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-filter text-amber-400"></i> Klasifikasi & Pemisahan Materi
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700/80 text-xs font-medium text-slate-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-atom text-sky-400"></i> Struktur & Model Atom
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700/80 text-xs font-medium text-slate-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-layer-group text-purple-400"></i> Konfigurasi Elektron
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-slate-800/90 border border-slate-700/80 text-xs font-medium text-slate-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-wave-square text-rose-400"></i> Bilangan Kuantum
+              </span>
+            </div>
+          </div>
+
+          <!-- Quiz Mode & Settings Box -->
+          <div class="w-full max-w-xl mt-8 p-4 sm:p-5 rounded-2xl bg-slate-950/60 border border-slate-800/90 text-left grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Mode Feedback Toggle -->
+            <div class="flex items-start justify-between gap-3 p-3 rounded-xl bg-slate-900/90 border border-slate-800">
+              <div>
+                <label for="toggle-instant-feedback" class="text-xs sm:text-sm font-bold text-white cursor-pointer flex items-center gap-1.5">
+                  <i class="fa-solid fa-bolt-lightning text-amber-400"></i> Feedback & Pembahasan Langsung
+                </label>
+                <p class="text-[11px] text-slate-400 mt-0.5">Lihat status benar/salah tiap klik jawaban sebelum Next</p>
+              </div>
+              <input id="toggle-instant-feedback" type="checkbox" checked class="w-5 h-5 accent-indigo-500 rounded cursor-pointer mt-0.5 shrink-0" />
+            </div>
+
+            <!-- Shuffle Questions Toggle -->
+            <div class="flex items-start justify-between gap-3 p-3 rounded-xl bg-slate-900/90 border border-slate-800">
+              <div>
+                <label for="toggle-shuffle" class="text-xs sm:text-sm font-bold text-white cursor-pointer flex items-center gap-1.5">
+                  <i class="fa-solid fa-shuffle text-teal-400"></i> Acak Urutan Soal
+                </label>
+                <p class="text-[11px] text-slate-400 mt-0.5">Nonaktif = Urut Nomor 1 s.d. 23 sesuai dokumen PDF</p>
+              </div>
+              <input id="toggle-shuffle" type="checkbox" class="w-5 h-5 accent-indigo-500 rounded cursor-pointer mt-0.5 shrink-0" />
+            </div>
+          </div>
+
+          <!-- Main Start Button -->
+          <div class="mt-8 w-full sm:w-auto relative z-20">
+            <button id="btn-start-quiz" type="button" onclick="window.startQuiz()" class="btn-3d-primary w-full sm:w-auto min-w-[270px] px-9 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white font-display font-bold text-lg sm:text-xl tracking-wide flex items-center justify-center gap-3 cursor-pointer">
+              <span>START QUIZ</span>
+              <i class="fa-solid fa-play text-base"></i>
+            </button>
+            <p class="text-[11px] text-slate-400 mt-3">
+              <i class="fa-regular fa-keyboard mr-1"></i> Pintasan keyboard: tekan <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">A</kbd>–<kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">E</kbd> untuk memilih & <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Enter</kbd> untuk Next.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         2. QUIZ SCREEN (1 QUESTION PER VIEW)
+    =========================================== -->
+    <section id="screen-quiz" class="w-full hidden pb-44">
+      <!-- Progress & Meta Bar -->
+      <div class="mb-4 sm:mb-5">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+          <!-- Question Counter Badge -->
+          <div class="flex items-center gap-2">
+            <span id="quiz-q-counter" class="px-3 py-1 rounded-xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 font-display font-bold text-xs sm:text-sm">
+              Soal 1 / 23
+            </span>
+            <span id="quiz-topic-badge" class="px-3 py-1 rounded-xl bg-slate-800/90 border border-slate-700 text-teal-300 text-xs sm:text-sm font-semibold flex items-center gap-1.5">
+              <i class="fa-solid fa-tag text-[11px]"></i>
+              <span id="quiz-topic-text">Metode Ilmiah</span>
+            </span>
+          </div>
+
+          <!-- Percentage Progress Text -->
+          <span id="quiz-progress-pct" class="text-xs font-bold text-slate-400">4% Selesai</span>
+        </div>
+
+        <!-- Smooth Progress Bar -->
+        <div class="w-full h-3 bg-slate-800/90 rounded-full overflow-hidden border border-slate-700/60 p-0.5">
+          <div id="quiz-progress-bar" class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-teal-400 rounded-full transition-all duration-300" style="width: 4.35%"></div>
+        </div>
+      </div>
+
+      <!-- Active Question Card Container -->
+      <div id="question-card-wrapper" class="rounded-3xl bg-slate-900/90 border border-slate-800 shadow-2xl backdrop-blur-xl p-4 sm:p-7 relative">
+        
+        <!-- Question Text Area -->
+        <div class="mb-5">
+          <div id="quiz-question-content" class="text-sm sm:text-lg font-semibold text-slate-100 leading-relaxed space-y-3">
+            <!-- Dynamically injected HTML question -->
+          </div>
+        </div>
+
+        <!-- 5 Interactive Option Cards (A - E) -->
+        <div id="quiz-options-list" class="grid grid-cols-1 gap-2.5 sm:gap-3.5">
+          <!-- Dynamically generated A-E cards -->
+        </div>
+
+        <!-- Quick Explanation Preview (Shown in Instant Feedback Mode) -->
+        <div id="quiz-instant-explanation" class="hidden mt-5 p-4 rounded-2xl bg-slate-950/85 border border-indigo-500/30 text-xs sm:text-sm text-slate-200 leading-relaxed animate-question-in">
+          <div class="font-bold text-indigo-300 mb-1 flex items-center gap-1.5">
+            <i class="fa-solid fa-lightbulb text-amber-400"></i> Pembahasan Singkat:
+          </div>
+          <div id="quiz-instant-explanation-text"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         3. RESULTS & FULL EVALUATION SCREEN
+    =========================================== -->
+    <section id="screen-results" class="w-full hidden animate-question-in">
+      <!-- Summary Hero Card -->
+      <div class="rounded-3xl bg-slate-900/90 border border-slate-800 shadow-2xl p-6 sm:p-10 mb-8 relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-72 h-72 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+          <!-- Left: Title, Grade Predicate, & Action Buttons -->
+          <div class="text-center md:text-left flex-1">
+            <div id="result-predicate-badge" class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs sm:text-sm font-bold mb-3">
+              <i class="fa-solid fa-trophy"></i>
+              <span>Sangat Memuaskan!</span>
+            </div>
+
+            <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight">
+              Hasil Evaluasi Quiz Kimia 2026
+            </h2>
+            <p id="result-subtitle-msg" class="text-slate-300 text-sm sm:text-base mt-2 max-w-lg">
+              Berikut adalah rincian skor akhir, analisis jawaban kamu, serta kunci dan pembahasan lengkap untuk ke-23 butir soal.
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-6">
+              <button id="btn-restart-top" type="button" onclick="window.restartQuiz()" class="btn-3d-primary px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold text-sm sm:text-base flex items-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>Ulangi Quiz</span>
+              </button>
+              <a href="#review-section" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-sm sm:text-base flex items-center gap-2 transition-colors">
+                <i class="fa-solid fa-list-check text-teal-400"></i>
+                <span>Lihat Review 23 Soal</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: Circular Score & Key Metrics Grid -->
+          <div class="flex flex-col sm:flex-row items-center gap-6 bg-slate-950/70 border border-slate-800/90 p-5 sm:p-6 rounded-2xl w-full md:w-auto justify-center">
+            <!-- Big Score Circle -->
+            <div class="relative w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center shrink-0">
+              <svg class="w-full h-full -rotate-90" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="52" stroke="#1e293b" stroke-width="10" fill="none" />
+                <circle id="score-ring-circle" cx="60" cy="60" r="52" stroke="url(#scoreGradient)" stroke-width="10" stroke-linecap="round" fill="none" stroke-dasharray="326.7" stroke-dashoffset="326.7" class="transition-all duration-1000 ease-out" />
+                <defs>
+                  <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#6366f1" />
+                    <stop offset="100%" stop-color="#10b981" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <span class="text-[11px] uppercase tracking-wider font-bold text-slate-400">Skor Akhir</span>
+                <span id="final-score-number" class="font-display font-extrabold text-3xl sm:text-4xl text-white">0</span>
+                <span id="final-accuracy-label" class="text-[11px] font-semibold text-teal-400">Akurasi 0%</span>
+              </div>
+            </div>
+
+            <!-- 2x2 Mini Stats -->
+            <div class="grid grid-cols-2 gap-3 w-full sm:w-auto min-w-[205px]">
+              <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25">
+                <div class="text-xs text-emerald-300 font-semibold flex items-center gap-1.5">
+                  <i class="fa-solid fa-circle-check"></i> Benar
+                </div>
+                <div id="stat-correct-count" class="font-display font-bold text-xl sm:text-2xl text-white mt-0.5">0 / 23</div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-rose-500/10 border border-rose-500/25">
+                <div class="text-xs text-rose-300 font-semibold flex items-center gap-1.5">
+                  <i class="fa-solid fa-circle-xmark"></i> Salah
+                </div>
+                <div id="stat-wrong-count" class="font-display font-bold text-xl sm:text-2xl text-white mt-0.5">0 / 23</div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25">
+                <div class="text-xs text-amber-300 font-semibold flex items-center gap-1.5">
+                  <i class="fa-solid fa-fire"></i> Streak Maks
+                </div>
+                <div id="stat-best-streak" class="font-display font-bold text-lg sm:text-xl text-white mt-0.5">0</div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/25">
+                <div class="text-xs text-indigo-300 font-semibold flex items-center gap-1.5">
+                  <i class="fa-regular fa-clock"></i> Waktu
+                </div>
+                <div id="stat-total-time" class="font-display font-bold text-lg sm:text-xl text-white mt-0.5">00:00</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review Section Header & Filter Buttons -->
+      <div id="review-section" class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+        <div>
+          <h3 class="font-display font-bold text-xl sm:text-2xl text-white flex items-center gap-2.5">
+            <i class="fa-solid fa-book-open-reader text-indigo-400"></i>
+            <span>Review 23 Soal, Jawaban Kita & Pembahasan</span>
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">
+            Periksa kembali setiap butir soal beserta perbandingan jawaban kita dengan kunci jawaban resmi.
+          </p>
+        </div>
+
+        <!-- Filter Pills -->
+        <div class="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 self-start sm:self-auto">
+          <button type="button" onclick="window.filterReview('all')" id="filter-btn-all" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white">
+            Semua (23)
+          </button>
+          <button type="button" onclick="window.filterReview('wrong')" id="filter-btn-wrong" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-300 hover:text-white">
+            Salah (<span id="filter-count-wrong">0</span>)
+          </button>
+          <button type="button" onclick="window.filterReview('correct')" id="filter-btn-correct" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-300 hover:text-white">
+            Benar (<span id="filter-count-correct">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <!-- Review Cards Container -->
+      <div id="review-list-container" class="space-y-5">
+        <!-- Dynamically populated 23 review cards -->
+      </div>
+
+      <!-- Bottom Restart CTA -->
+      <div class="mt-10 p-6 rounded-3xl bg-slate-900/80 border border-slate-800 text-center flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-left">
+          <h4 class="font-display font-bold text-lg text-white">Ingin meningkatkan skor kamu hingga 100?</h4>
+          <p class="text-xs sm:text-sm text-slate-400">Ulangi kembali Quiz Kimia 2026 untuk melatih daya ingat dan ketepatan analisis soal.</p>
+        </div>
+        <button id="btn-restart-bottom" type="button" onclick="window.restartQuiz()" class="btn-3d-primary w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold text-sm sm:text-base flex items-center justify-center gap-2 shrink-0 cursor-pointer">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Main Lagi Sekarang</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Fixed Bottom Action Dock (Strictly Hidden on Start & Results Screen so it NEVER covers Start Button) -->
+  <div id="quiz-bottom-dock" class="dock-hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/90 px-4 py-3 sm:py-4 shadow-[0_-10px_30px_rgba(0,0,0,0.7)]">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
+      <!-- Left Status / Feedback Info -->
+      <div id="quiz-feedback-banner" class="flex items-center gap-2.5 min-w-0 flex-1">
+        <div class="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 text-slate-400 flex items-center justify-center text-sm shrink-0">
+          <i class="fa-regular fa-hand-pointer"></i>
+        </div>
+        <div class="truncate">
+          <div class="font-display font-bold text-xs sm:text-sm text-slate-200 truncate">Pilih Jawaban (A–E)</div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Klik salah satu opsi di atas untuk mengaktifkan tombol lanjut</p>
+        </div>
+      </div>
+
+      <!-- Next Question Button -->
+      <button id="btn-next-question" type="button" onclick="window.nextQuestion()" disabled class="px-5 sm:px-7 py-3 sm:py-3.5 rounded-2xl font-display font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 shrink-0 transition-all bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed">
+        <span id="btn-next-text">Soal Berikutnya</span>
+        <i id="btn-next-icon" class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Custom Modal Confirmation (Replaces alert/confirm) -->
+  <div id="modal-confirm-home" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 shadow-2xl animate-question-in">
+      <div class="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center text-xl mb-4">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h3 class="font-display font-bold text-xl text-white">Kembali ke Halaman Awal?</h3>
+      <p class="text-sm text-slate-300 mt-2 leading-relaxed">
+        Progres pengerjaan quiz kamu saat ini akan direset jika kembali ke halaman utama. Apakah kamu yakin?
+      </p>
+      <div class="flex items-center justify-end gap-3 mt-6">
+        <button type="button" onclick="window.closeConfirmModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold transition-colors">
+          Batal
+        </button>
+        <button type="button" onclick="window.resetToHomeScreen()" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-sm font-bold transition-colors">
+          Ya, Kembali
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full border-t border-slate-800/60 py-5 mt-8 text-center text-xs text-slate-500">
+    <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span><strong>Quiz Kimia 2026</strong> • Latihan Persiapan Penilaian Akhir Kimia Fase E</span>
+      <span>23 Indikator Kisi-Kisi Lengkap dengan Pembahasan</span>
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       COMPLETE 23 QUESTIONS DATA & APPLICATION SCRIPT
+  =========================================== -->
+  <script>
+    /**
+     * 1. DATA LENGKAP 23 SOAL PREDIKSI & PEMBAHASAN KIMIA FASE E
+     */
+    const MASTER_QUESTIONS = [
+      {
+        id: 1,
+        topic: "Metode Ilmiah",
+        questionHtml: `
+          <p>Seorang peserta didik mengamati bahwa paku besi yang dibiarkan di ruang terbuka lebih cepat berkarat dibandingkan paku besi yang disimpan di dalam wadah tertutup berisi silika gel. Ia kemudian melakukan tahapan penyelidikan sebagai berikut:</p>
+          <ol class="list-decimal list-inside space-y-1.5 bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 text-xs sm:text-sm text-slate-200 font-normal">
+            <li>Menduga bahwa kelembapan udara mempercepat proses perkaratan besi.</li>
+            <li>Mencatat perubahan massa dan luas permukaan karat pada paku setiap hari selama dua minggu.</li>
+            <li>Merumuskan pertanyaan: <em>"Apakah kadar uap air memengaruhi laju perkaratan besi?"</em></li>
+            <li>Menempatkan paku besi dalam tiga tabung berbeda (berisi air, udara kering, dan minyak).</li>
+            <li>Menyimpulkan bahwa keberadaan air dan oksigen diperlukan agar besi berkarat.</li>
+          </ol>
+          <p>Urutan langkah-langkah metode ilmiah yang tepat sesuai kaidah kerja ilmiah adalah ....</p>
+        `,
+        options: {
+          A: "(1) – (3) – (4) – (2) – (5)",
+          B: "(3) – (4) – (1) – (2) – (5)",
+          C: "(3) – (1) – (4) – (2) – (5)",
+          D: "(4) – (3) – (1) – (2) – (5)",
+          E: "(3) – (1) – (2) – (4) – (5)"
+        },
+        answer: "C",
+        explanation: "Urutan baku metode ilmiah setelah observasi awal adalah: merumuskan masalah <strong>(3)</strong> &rarr; menyusun hipotesis atau dugaan sementara <strong>(1)</strong> &rarr; melakukan eksperimen untuk menguji hipotesis <strong>(4)</strong> &rarr; mengumpulkan serta menganalisis data pengamatan <strong>(2)</strong> &rarr; menarik kesimpulan <strong>(5)</strong>."
+      },
+      {
+        id: 2,
+        topic: "Simbol Bahaya Bahan Kimia",
+        questionHtml: `
+          <p>Pada botol reagen berisi larutan etanol 96% dan aseton di laboratorium kimia terdapat label piktogram berbentuk belah ketupat dengan tepi merah dan gambar <strong>nyala api berwarna hitam</strong> di dalamnya. Makna simbol tersebut serta tindakan pencegahan yang paling tepat adalah ....</p>
+        `,
+        options: {
+          A: "Bahan bersifat oksidator kuat; harus disimpan berdekatan dengan zat reduktor agar stabil",
+          B: "Bahan mudah terbakar (flammable); harus dijauhkan dari nyala api, loncatan listrik, dan sumber panas",
+          C: "Bahan mudah meledak (explosive); hanya boleh dipanaskan di atas pembakar bunsen terbuka",
+          D: "Bahan bersifat korosif; dapat melarutkan jaringan kulit dan logam secara langsung",
+          E: "Bahan beracun akut; uapnya menyebabkan iritasi ringan sehingga cukup ditangani tanpa ventilasi"
+        },
+        answer: "B",
+        explanation: "Piktogram GHS bergambar nyala api menandakan bahan mudah terbakar (<em>flammable</em>), seperti etanol dan aseton yang memiliki titik nyala rendah. Bahan ini harus disimpan di tempat sejuk, berventilasi baik, dan jauh dari sumber api atau percikan listrik."
+      },
+      {
+        id: 3,
+        topic: "Keselamatan Kerja – Penanganan Asam",
+        questionHtml: `
+          <p>Dalam kegiatan praktikum titrasi, seorang siswa diminta membuat larutan asam sulfat (H<sub>2</sub>SO<sub>4</sub>) encer dari larutan asam sulfat pekat 98%. Prosedur keselamatan kerja yang paling tepat dilakukan siswa tersebut adalah ....</p>
+        `,
+        options: {
+          A: "Menuangkan akuades sekaligus ke dalam gelas kimia yang sudah berisi asam sulfat pekat",
+          B: "Mencampurkan asam sulfat pekat dan akuades dalam labu ukur tertutup lalu mengocoknya dengan kuat",
+          C: "Memanaskan asam sulfat pekat terlebih dahulu sebelum ditambahkan air agar cepat homogen",
+          D: "Menuangkan asam sulfat pekat sedikit demi sedikit melalui dinding gelas kimia yang telah berisi air dingin sambil diaduk perlahan",
+          E: "Mengambil asam sulfat pekat menggunakan pipet tetes tanpa sarung tangan di luar lemari asam"
+        },
+        answer: "D",
+        explanation: "Pelarutan asam sulfat pekat dalam air bersifat sangat eksotermis (melepaskan kalor besar). Prinsip keselamatan kerja yang wajib diikuti adalah menuangkan asam pekat ke dalam air secara perlahan melalui dinding wadah sambil diaduk agar panas terserap merata oleh air dan mencegah cipratan asam mendidih."
+      },
+      {
+        id: 4,
+        topic: "Manfaat Kimia Hijau",
+        questionHtml: `
+          <p>Pendekatan kimia hijau (<em>green chemistry</em>) dikembangkan untuk merancang produk dan proses kimia yang berkelanjutan. Manfaat utama penerapan prinsip kimia hijau bagi lingkungan dan industri adalah ....</p>
+        `,
+        options: {
+          A: "Mencegah terbentuknya limbah beracun sejak awal sintesis sehingga menekan pencemaran dan biaya pengolahan limbah",
+          B: "Meningkatkan penggunaan pelarut organik volatil agar reaksi berlangsung pada tekanan sangat tinggi",
+          C: "Memperbanyak produksi bahan kimia sintetis sekali pakai guna memaksimalkan keuntungan industri",
+          D: "Menggantikan seluruh katalis reaksi dengan pereaksi stoikiometrik berlebih agar produk lebih banyak",
+          E: "Mengalihkan pembuangan limbah cair industri langsung ke aliran sungai setelah diencerkan"
+        },
+        answer: "A",
+        explanation: "Prinsip pertama dan utama kimia hijau adalah pencegahan limbah (<em>prevention</em>), yaitu merancang sintesis kimia yang meminimalkan atau meniadakan produk samping berbahaya sehingga aman bagi ekosistem sekaligus lebih hemat biaya."
+      },
+      {
+        id: 5,
+        topic: "Perbedaan Unsur dan Senyawa",
+        questionHtml: `
+          <p>Pernyataan berikut yang paling tepat membedakan antara <strong>unsur</strong> dan <strong>senyawa</strong> adalah ....</p>
+        `,
+        options: {
+          A: "Unsur tersusun dari beberapa jenis molekul berbeda, sedangkan senyawa tersusun dari satu jenis atom saja",
+          B: "Unsur dapat diuraikan menjadi zat lebih sederhana dengan pemanasan biasa, sedangkan senyawa tidak dapat diuraikan",
+          C: "Sifat senyawa selalu sama dengan sifat unsur-unsur penyusunnya, sedangkan unsur memiliki sifat yang berubah-ubah",
+          D: "Unsur selalu berwujud logam padat pada suhu kamar, sedangkan senyawa selalu berwujud cair atau gas",
+          E: "Unsur merupakan zat tunggal yang tidak dapat diuraikan lagi melalui reaksi kimia biasa, sedangkan senyawa terbentuk dari gabungan dua atau lebih unsur berbeda secara kimia dengan perbandingan tetap"
+        },
+        answer: "E",
+        explanation: "Unsur hanya terdiri dari satu jenis atom sehingga tidak dapat diuraikan lagi menjadi zat lebih sederhana melalui reaksi kimia biasa. Sebaliknya, senyawa tersusun atas dua atau lebih unsur berbeda yang berikatan kimia dengan perbandingan massa tetap dan memiliki sifat baru yang berbeda dari unsur pembentuknya."
+      },
+      {
+        id: 6,
+        topic: "Identifikasi Unsur dan Senyawa",
+        questionHtml: `
+          <p>Perhatikan daftar enam jenis materi berikut:</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 text-xs sm:text-sm text-slate-200 font-normal">
+            <div>1. Logam emas (Au)</div>
+            <div>2. Air murni (H<sub>2</sub>O)</div>
+            <div>3. Gas oksigen (O<sub>2</sub>)</div>
+            <div>4. Garam dapur (NaCl)</div>
+            <div>5. Serbuk belerang (S<sub>8</sub>)</div>
+            <div>6. Gas karbon dioksida (CO<sub>2</sub>)</div>
+          </div>
+          <p>Kelompok materi yang tergolong sebagai <strong>unsur</strong> dan <strong>senyawa</strong> secara berturut-turut adalah ....</p>
+        `,
+        options: {
+          A: "(1), (2), (3) dan (4), (5), (6)",
+          B: "(1), (3), (5) dan (2), (4), (6)",
+          C: "(2), (4), (6) dan (1), (3), (5)",
+          D: "(1), (5), (6) dan (2), (3), (4)",
+          E: "(3), (4), (5) dan (1), (2), (6)"
+        },
+        answer: "B",
+        explanation: "Emas (Au), gas oksigen (O<sub>2</sub>), dan belerang (S<sub>8</sub>) tersusun dari satu jenis atom saja sehingga termasuk <strong>unsur (1, 3, 5)</strong>. Air (H<sub>2</sub>O), garam dapur (NaCl), dan karbon dioksida (CO<sub>2</sub>) tersusun dari gabungan dua jenis unsur berbeda sehingga termasuk <strong>senyawa (2, 4, 6)</strong>."
+      },
+      {
+        id: 7,
+        topic: "Campuran Homogen, Koloid, dan Heterogen",
+        questionHtml: `
+          <p>Seorang siswa mengamati tiga jenis sistem dispersi di dapur, yaitu: <strong>(1)</strong> larutan gula dalam air bening, <strong>(2)</strong> susu cair segar, dan <strong>(3)</strong> campuran tepung beras kasar dalam air dingin yang mengendap saat didiamkan. Klasifikasi ketiga sistem tersebut secara berturut-turut adalah ....</p>
+        `,
+        options: {
+          A: "Koloid, larutan homogen, dan suspensi heterogen",
+          B: "Suspensi heterogen, koloid, dan larutan homogen",
+          C: "Larutan homogen, koloid, dan campuran heterogen (suspensi)",
+          D: "Larutan homogen, campuran heterogen, dan koloid",
+          E: "Ketiganya termasuk campuran homogen karena sama-sama berfase cair"
+        },
+        answer: "C",
+        explanation: "Larutan gula tampak jernih satu fase tanpa endapan sehingga tergolong <strong>larutan homogen</strong>. Susu cair tampak homogen secara makroskopis tetapi menghamburkan cahaya (efek Tyndall) dan memiliki dua fase mikroskopis sehingga termasuk <strong>koloid</strong>. Campuran tepung kasar dalam air cepat mengendap dan tampak batas fasenya sehingga termasuk <strong>campuran heterogen (suspensi)</strong>."
+      },
+      {
+        id: 8,
+        topic: "Identifikasi Reaksi Kimia",
+        questionHtml: `
+          <p>Di antara peristiwa berikut dalam kehidupan sehari-hari dan laboratorium, manakah yang merupakan <strong>reaksi kimia (perubahan kimia)</strong>?</p>
+        `,
+        options: {
+          A: "Es batu yang mencair menjadi air ketika diletakkan pada suhu ruang",
+          B: "Kristal gula pasir yang dilarutkan ke dalam segelas air hangat",
+          C: "Kapur barus yang menyublim menjadi gas di dalam lemari pakaian",
+          D: "Pita logam magnesium yang dibakar menghasilkan nyala terang dan abu putih magnesium oksida",
+          E: "Batang besi yang dipanaskan hingga membara kemudian didinginkan kembali ke bentuk semula"
+        },
+        answer: "D",
+        explanation: "Pembakaran pita magnesium (2Mg + O<sub>2</sub> &rarr; 2MgO) menghasilkan zat baru berupa serbuk magnesium oksida yang sifatnya berbeda dari logam magnesium semula sehingga merupakan reaksi kimia. Pilihan A, B, C, dan E hanya mengalami perubahan wujud atau pelarutan fisik tanpa membentuk zat baru."
+      },
+      {
+        id: 9,
+        topic: "Pemisahan Campuran Batu dan Pasir",
+        questionHtml: `
+          <p>Pekerja bangunan ingin memisahkan campuran batu kerikil dan pasir halus agar diperoleh pasir yang seragam untuk plesteran dinding. Metode pemisahan campuran yang paling tepat digunakan beserta dasar pemisahannya adalah ....</p>
+        `,
+        options: {
+          A: "Pengayakan (sieving), berdasarkan perbedaan ukuran partikel padatan",
+          B: "Destilasi bertingkat, berdasarkan perbedaan titik didih zat",
+          C: "Sublimasi, berdasarkan kemampuan salah satu zat menyublim",
+          D: "Kromatografi kertas, berdasarkan perbedaan kelarutan dalam fase gerak",
+          E: "Kristalisasi, berdasarkan perbedaan titik beku larutan"
+        },
+        answer: "A",
+        explanation: "Batu kerikil dan pasir merupakan campuran dua zat padat yang memiliki perbedaan ukuran butiran sangat jelas, sehingga pemisahan paling efisien dilakukan dengan <strong>pengayakan (<em>sieving</em>)</strong>."
+      },
+      {
+        id: 10,
+        topic: "Pemisahan Campuran Cair–Cair",
+        questionHtml: `
+          <p>Campuran homogen antara etanol (titik didih 78,4 &deg;C) dan air (titik didih 100 &deg;C) hendak dipisahkan untuk memperoleh etanol dengan kemurnian tinggi. Teknik pemisahan campuran yang paling sesuai untuk tujuan tersebut adalah ....</p>
+        `,
+        options: {
+          A: "Filtrasi menggunakan kertas saring biasa",
+          B: "Dekantasi dengan menuangkan cairan secara perlahan",
+          C: "Destilasi (penyulingan) berdasarkan perbedaan titik didih komponennya",
+          D: "Ekstraksi menggunakan corong pisah karena kedua zat tidak saling melarutkan",
+          E: "Pengayakan menggunakan saringan bertingkat"
+        },
+        answer: "C",
+        explanation: "Etanol dan air membentuk campuran homogen cair-cair dengan perbedaan titik didih cukup besar (78,4 &deg;C dan 100 &deg;C). Oleh karena itu, keduanya dipisahkan melalui <strong>destilasi (penyulingan)</strong>, di mana etanol menguap lebih dulu dan diembunkan kembali menjadi destilat murni."
+      },
+      {
+        id: 11,
+        topic: "Pemisahan Campuran Zat Warna",
+        questionHtml: `
+          <p>Untuk mengidentifikasi jenis pigmen warna yang terkandung dalam tinta spidol hitam, seorang siswa meneteskan tinta tersebut pada kertas saring lalu mencelupkan ujung bawah kertas ke dalam pelarut air hingga terpisah menjadi beberapa pita warna. Metode pemisahan ini disebut ....</p>
+        `,
+        options: {
+          A: "Sublimasi",
+          B: "Sentrifugasi",
+          C: "Evaporasi",
+          D: "Kristalisasi",
+          E: "Kromatografi kertas"
+        },
+        answer: "E",
+        explanation: "Pemisahan komponen zat warna tinta pada kertas saring berdasarkan perbedaan daya serap fase diam (kertas) dan kelarutan pada fase gerak (pelarut) merupakan prinsip kerja <strong>kromatografi kertas</strong>."
+      },
+      {
+        id: 12,
+        topic: "Perbedaan Senyawa dan Campuran",
+        questionHtml: `
+          <p>Air murni (H<sub>2</sub>O) termasuk senyawa, sedangkan air laut termasuk campuran. Perbedaan mendasar di antara keduanya ditunjukkan oleh pernyataan ....</p>
+        `,
+        options: {
+          A: "Komponen dalam air laut terikat secara kimia dengan perbandingan tetap, sedangkan air murni tidak",
+          B: "Air murni terbentuk melalui reaksi kimia dengan perbandingan massa unsur penyusun yang tetap, sedangkan komponen air laut bergabung secara fisika dengan komposisi bervariasi",
+          C: "Air murni dapat dipisahkan menjadi hidrogen dan oksigen melalui penyaringan biasa",
+          D: "Air laut memiliki titik didih yang selalu konstan pada 100 °C pada tekanan 1 atm",
+          E: "Sifat air murni merupakan gabungan rata-rata sifat gas hidrogen yang mudah terbakar dan gas oksigen"
+        },
+        answer: "B",
+        explanation: "Air murni (H<sub>2</sub>O) adalah senyawa dengan perbandingan massa H : O selalu tetap (1 : 8) dan hanya dapat diuraikan secara kimia (elektrolisis). Air laut adalah campuran air, garam, dan mineral dengan kadar yang bervariasi antarwilayah serta dapat dipisahkan secara fisika."
+      },
+      {
+        id: 13,
+        topic: "Penerapan Kimia Hijau",
+        questionHtml: `
+          <p>Berikut ini merupakan contoh penerapan prinsip kimia hijau dalam kehidupan sehari-hari dan industri ramah lingkungan, <strong>kecuali</strong> ....</p>
+        `,
+        options: {
+          A: "Mengembangkan kemasan bioplastik berbahan dasar pati singkong yang mudah terurai oleh mikroorganisme",
+          B: "Menggunakan katalis selektif dalam sintesis obat agar suhu reaksi lebih rendah dan hemat energi",
+          C: "Memanfaatkan minyak jelantah sebagai bahan baku pembuatan biodiesel terbarukan",
+          D: "Meningkatkan pembakaran batu bara berkalori rendah tanpa penyaring emisi untuk menekan biaya listrik pabrik",
+          E: "Mengganti pemutih berbasis klorin dengan hidrogen peroksida (H<sub>2</sub>O<sub>2</sub>) pada industri kertas"
+        },
+        answer: "D",
+        explanation: "Pembakaran batu bara tanpa pengendalian emisi menghasilkan gas rumah kaca, oksida belerang (SO<sub>2</sub>), dan partikulat berbahaya yang bertentangan dengan prinsip pencegahan polusi dan efisiensi energi pada kimia hijau."
+      },
+      {
+        id: 14,
+        topic: "Model Atom Bohr (Keunggulan & Kekurangan)",
+        questionHtml: `
+          <p>Niels Bohr menyempurnakan teori atom sebelumnya dengan memperkenalkan gagasan lintasan elektron stasioner. Pernyataan yang tepat mengenai keunggulan dan kelemahan model atom Bohr adalah ....</p>
+        `,
+        options: {
+          A: "Keunggulannya mampu menjelaskan spektrum garis atom hidrogen dengan akurat, sedangkan kelemahannya belum dapat menjelaskan spektrum atom berelektron banyak serta efek Zeeman",
+          B: "Keunggulannya menemukan inti atom bermuatan positif, sedangkan kelemahannya menganggap atom sebagai bola pejal bermuatan positif",
+          C: "Keunggulannya menentukan posisi elektron secara pasti menggunakan prinsip ketidakpastian, sedangkan kelemahannya tidak mengenal kulit atom",
+          D: "Keunggulannya menjelaskan ikatan kovalen dalam molekul kompleks, sedangkan kelemahannya tidak berlaku untuk atom hidrogen",
+          E: "Keunggulannya menemukan partikel neutron di dalam inti atom, sedangkan kelemahannya mengabaikan keberadaan proton"
+        },
+        answer: "A",
+        explanation: "Model atom Bohr berhasil menjelaskan spektrum emisi garis atom hidrogen melalui postulat kulit energi stasioner, tetapi gagal memprediksi spektrum atom berelektron banyak serta tidak menjelaskan terpecahnya garis spektrum dalam medan magnet (efek Zeeman)."
+      },
+      {
+        id: 15,
+        topic: "Model Atom Rutherford (Keunggulan & Kekurangan)",
+        questionHtml: `
+          <p>Berdasarkan percobaan penghamburan sinar alfa terhadap lempeng tipis emas, Ernest Rutherford mengusulkan model atom inti. Keunggulan utama sekaligus kelemahan mendasar dari model atom Rutherford adalah ....</p>
+        `,
+        options: {
+          A: "Berhasil menjelaskan spektrum diskrit atom hidrogen, tetapi gagal menjelaskan keberadaan muatan positif atom",
+          B: "Membuktikan bahwa elektron tersebar merata seperti kismis di dalam bola bermuatan positif, tetapi tidak mengenal ruang hampa",
+          C: "Menemukan bahwa sebagian besar volume atom adalah ruang hampa dengan inti bermuatan positif di pusatnya, tetapi tidak dapat menjelaskan mengapa elektron yang mengorbit inti tidak kehilangan energi dan jatuh ke inti",
+          D: "Menjelaskan adanya orbital subkulit s, p, d, f, tetapi gagal menjelaskan sifat gelombang elektron",
+          E: "Menyatakan bahwa atom tidak dapat dibagi lagi menjadi partikel subatomik, tetapi mampu menjelaskan isotop unsur"
+        },
+        answer: "C",
+        explanation: "Percobaan lempeng emas Rutherford membuktikan keberadaan inti atom bermuatan positif yang kecil dan padat di tengah ruang hampa atom. Namun, menurut fisika klasik, elektron yang mengorbit inti seharusnya memancarkan gelombang elektromagnetik terus-menerus hingga kehabisan energi dan jatuh ke inti."
+      },
+      {
+        id: 16,
+        topic: "Proton, Elektron, dan Neutron",
+        questionHtml: `
+          <p>Suatu kation logam besi dinotasikan sebagai <span class="nuclide"><sup>56</sup><sub>26</sub></span>Fe<sup>3+</sup>. Jumlah <strong>proton, elektron, dan neutron</strong> yang terdapat dalam ion tersebut secara berturut-turut adalah ....</p>
+        `,
+        options: {
+          A: "26, 26, dan 30",
+          B: "26, 23, dan 30",
+          C: "26, 29, dan 30",
+          D: "30, 23, dan 26",
+          E: "23, 26, dan 56"
+        },
+        answer: "B",
+        explanation: "Pada notasi <span class='nuclide'><sup>56</sup><sub>26</sub></span>Fe<sup>3+</sup>, nomor atom Z = 26 dan nomor massa A = 56. Maka jumlah <strong>proton = 26</strong>; jumlah <strong>elektron</strong> (melepas 3 elektron karena bermuatan +3) = 26 &minus; 3 = <strong>23</strong>; dan jumlah <strong>neutron</strong> = 56 &minus; 26 = <strong>30</strong>."
+      },
+      {
+        id: 17,
+        topic: "Isotop, Isoton, Isobar, dan Isoelektron",
+        questionHtml: `
+          <p>Perhatikan lima notasi atom dan ion berikut:</p>
+          <div class="flex flex-wrap items-center gap-3 bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 text-xs sm:text-sm text-slate-200 font-semibold">
+            <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">P: <span class="nuclide"><sup>14</sup><sub>6</sub></span>C</span>
+            <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">Q: <span class="nuclide"><sup>14</sup><sub>7</sub></span>N</span>
+            <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">R: <span class="nuclide"><sup>15</sup><sub>7</sub></span>N</span>
+            <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">S: <span class="nuclide"><sup>16</sup><sub>8</sub></span>O<sup>2&minus;</sup></span>
+            <span class="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800">T: <span class="nuclide"><sup>20</sup><sub>10</sub></span>Ne</span>
+          </div>
+          <p>Pasangan spesi yang merupakan <strong>isoelektron</strong> dan <strong>isoton</strong> secara berturut-turut adalah ....</p>
+        `,
+        options: {
+          A: "Q dengan R dan P dengan Q",
+          B: "P dengan Q dan S dengan T",
+          C: "P dengan R dan Q dengan R",
+          D: "S dengan T dan P dengan R",
+          E: "Q dengan S dan R dengan T"
+        },
+        answer: "D",
+        explanation: "Hitung partikel tiap spesi: P (<span class='nuclide'><sup>14</sup><sub>6</sub></span>C: p=6, n=8, e=6); Q (<span class='nuclide'><sup>14</sup><sub>7</sub></span>N: p=7, n=7, e=7); R (<span class='nuclide'><sup>15</sup><sub>7</sub></span>N: p=7, n=8, e=7); S (<span class='nuclide'><sup>16</sup><sub>8</sub></span>O<sup>2&minus;</sup>: p=8, n=8, e=10); T (<span class='nuclide'><sup>20</sup><sub>10</sub></span>Ne: p=10, n=10, e=10). Spesi <strong>S dan T</strong> sama-sama memiliki 10 elektron (<strong>isoelektron</strong>), sedangkan <strong>P dan R</strong> sama-sama memiliki 8 neutron (<strong>isoton</strong>)."
+      },
+      {
+        id: 18,
+        topic: "Emisi Spektrum Warna-Warni",
+        questionHtml: `
+          <p>Ketika gas hidrogen atau garam logam dipanaskan pada nyala api berenergi tinggi, pancaran cahayanya yang dilewatkan melalui prisma menghasilkan spektrum emisi garis berwarna-warni yang khas. Fenomena tersebut terjadi karena ....</p>
+        `,
+        options: {
+          A: "Inti atom terpecah menjadi partikel alfa dan beta yang memancarkan cahaya putih kontinu",
+          B: "Elektron menyerap energi secara terus-menerus lalu bergerak spiral jatuh ke dalam inti atom",
+          C: "Proton berpindah dari kulit terluar menuju kulit terdalam sambil menyerap radiasi inframerah",
+          D: "Neutron di dalam inti bertumbukan dengan elektron valensi sehingga menimbulkan kilatan cahaya",
+          E: "Elektron yang tereksitasi ke tingkat energi lebih tinggi kembali ke tingkat energi lebih rendah sambil memancarkan foton dengan panjang gelombang tertentu"
+        },
+        answer: "E",
+        explanation: "Saat atom menerima energi, elektron berpindah ke kulit lebih tinggi (eksitasi). Ketika elektron kembali ke kulit dengan energi lebih rendah (deeksitasi), selisih energi dipancarkan sebagai foton cahaya pada panjang gelombang spesifik yang teramati sebagai garis-garis berwarna."
+      },
+      {
+        id: 19,
+        topic: "Konfigurasi Elektron Bohr",
+        questionHtml: `
+          <p>Unsur bromin memiliki nomor atom 35 (<sub>35</sub>Br). Konfigurasi elektron atom bromin berdasarkan model kulit Niels Bohr serta jumlah elektron valensinya secara berturut-turut adalah ....</p>
+        `,
+        options: {
+          A: "2, 8, 8, 17 dan elektron valensi 17",
+          B: "2, 8, 18, 5, 2 dan elektron valensi 2",
+          C: "2, 8, 18, 7 dan elektron valensi 7",
+          D: "2, 18, 8, 7 dan elektron valensi 7",
+          E: "2, 8, 16, 9 dan elektron valensi 9"
+        },
+        answer: "C",
+        explanation: "Atom <sub>35</sub>Br memiliki 35 elektron yang mengisi kulit secara bertahap: kulit K = 2, kulit L = 8, kulit M = 18 (maksimum 2n<sup>2</sup> = 18), dan sisa elektron menempati kulit N = 35 &minus; (2 + 8 + 18) = 7. Jadi konfigurasinya <strong>2, 8, 18, 7</strong> dengan <strong>elektron valensi 7</strong>."
+      },
+      {
+        id: 20,
+        topic: "Konfigurasi Elektron Aufbau",
+        questionHtml: `
+          <p>Unsur kromium memiliki nomor atom 24 (<sub>24</sub>Cr). Dengan memperhatikan aturan Aufbau serta kestabilan subkulit <em>d</em> setengah penuh, konfigurasi elektron atom netral <sub>24</sub>Cr yang paling tepat adalah ....</p>
+        `,
+        options: {
+          A: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 4s<sup>2</sup> 3d<sup>4</sup>",
+          B: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 4s<sup>1</sup> 3d<sup>5</sup>",
+          C: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 3d<sup>6</sup>",
+          D: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 4s<sup>2</sup> 4p<sup>4</sup>",
+          E: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>5</sup> 4s<sup>2</sup> 3d<sup>6</sup>"
+        },
+        answer: "B",
+        explanation: "Berdasarkan aturan Aufbau, pengisian sementara <sub>24</sub>Cr berakhir pada 4s<sup>2</sup> 3d<sup>4</sup>. Namun, satu elektron dari orbital 4s berpindah ke orbital 3d untuk mencapai konfigurasi setengah penuh yang jauh lebih stabil, menghasilkan <strong>1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 4s<sup>1</sup> 3d<sup>5</sup></strong>."
+      },
+      {
+        id: 21,
+        topic: "Menentukan Bilangan Kuantum",
+        questionHtml: `
+          <p>Atom unsur klorin memiliki nomor atom 17 (<sub>17</sub>Cl). Nilai keempat bilangan kuantum (<em>n, l, m, s</em>) untuk elektron terakhir pada atom <sub>17</sub>Cl adalah ....</p>
+        `,
+        options: {
+          A: "n = 3, l = 1, m = 0, s = −1/2",
+          B: "n = 3, l = 1, m = +1, s = −1/2",
+          C: "n = 3, l = 1, m = −1, s = +1/2",
+          D: "n = 3, l = 0, m = 0, s = −1/2",
+          E: "n = 3, l = 2, m = 0, s = +1/2"
+        },
+        answer: "A",
+        explanation: "Konfigurasi elektron <sub>17</sub>Cl adalah 1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>5</sup>. Elektron terakhir berada pada subkulit 3p<sup>5</sup> sehingga <strong>n = 3</strong> dan <strong>l = 1</strong>. Ketiga orbital p (m = &minus;1, 0, +1) diisi 3 elektron berarah spin ke atas terlebih dahulu, kemudian elektron ke-4 berpasangan di m = &minus;1, dan elektron ke-5 berpasangan di kotak tengah (<strong>m = 0</strong>) dengan arah spin ke bawah (<strong>s = &minus;1/2</strong>)."
+      },
+      {
+        id: 22,
+        topic: "Bilangan Kuantum yang Salah",
+        questionHtml: `
+          <p>Berdasarkan aturan bilangan kuantum mekanika kuantum, manakah himpunan empat bilangan kuantum (<em>n, l, m, s</em>) berikut yang <strong>tidak diizinkan (salah)</strong> untuk suatu elektron di dalam atom?</p>
+        `,
+        options: {
+          A: "n = 1, l = 0, m = 0, s = +1/2",
+          B: "n = 2, l = 1, m = −1, s = −1/2",
+          C: "n = 3, l = 2, m = +2, s = +1/2",
+          D: "n = 2, l = 2, m = −1, s = +1/2",
+          E: "n = 4, l = 3, m = −2, s = −1/2"
+        },
+        answer: "D",
+        explanation: "Nilai bilangan kuantum azimut (<em>l</em>) dibatasi oleh aturan <strong>0 &le; l &le; n &minus; 1</strong>. Pada pilihan D, untuk kulit utama n = 2, nilai <em>l</em> maksimum yang diperbolehkan hanyalah l = 1 (subkulit 2p), sehingga kombinasi <strong>n = 2 dan l = 2</strong> (tidak ada subkulit 2d) adalah salah."
+      },
+      {
+        id: 23,
+        topic: "Konfigurasi Elektron Atom Netral dari Ion",
+        questionHtml: `
+          <p>Diketahui ion logam X<sup>2+</sup> memiliki konfigurasi elektron <strong>1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 3d<sup>6</sup></strong>. Konfigurasi elektron untuk atom netral X adalah ....</p>
+        `,
+        options: {
+          A: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 3d<sup>4</sup>",
+          B: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 3d<sup>8</sup>",
+          C: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 4s<sup>1</sup> 3d<sup>7</sup>",
+          D: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 4s<sup>2</sup> 4p<sup>6</sup>",
+          E: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 4s<sup>2</sup> 3d<sup>6</sup>"
+        },
+        answer: "E",
+        explanation: "Ion X<sup>2+</sup> memiliki 24 elektron (1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 3d<sup>6</sup>), yang berarti atom netral X memiliki 24 + 2 = 26 elektron. Pada pembentukan kation unsur transisi, elektron dilepaskan terlebih dahulu dari kulit terluar 4s<sup>2</sup>, sehingga konfigurasi atom netral X adalah <strong>1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 4s<sup>2</sup> 3d<sup>6</sup></strong>."
+      }
+    ];
+
+    /**
+     * 2. WEB AUDIO API SYNTHESIZER (SAFE TRY/CATCH WRAPPED)
+     */
+    let soundEnabled = true;
+    let bgmEnabled = true;
+    let bgmPlaying = false;
+    let bgmInterval = null;
+    let bgmStep = 0;
+    let audioCtx = null;
+
+    function getAudioContext() {
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+        return audioCtx;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function startBGM() {
+      try {
+        if (!bgmEnabled) return;
+        stopBGM();
+        const ctx = getAudioContext();
+        if (!ctx) return;
+
+        bgmPlaying = true;
+        bgmStep = 0;
+
+        const melodyNotes = [
+          523.25, 0, 659.25, 587.33,
+          783.99, 0, 659.25, 523.25,
+          440.00, 0, 523.25, 659.25,
+          587.33, 523.25, 440.00, 392.00
+        ];
+        const bassNotes = [
+          130.81, 130.81, 164.81, 164.81,
+          196.00, 196.00, 130.81, 130.81,
+          110.00, 110.00, 130.81, 130.81,
+          146.83, 146.83, 98.00, 98.00
+        ];
+
+        bgmInterval = setInterval(() => {
+          try {
+            if (!bgmEnabled || !bgmPlaying) return;
+            const c = getAudioContext();
+            if (!c || c.state !== 'running') return;
+            const now = c.currentTime;
+
+            const idx = bgmStep % melodyNotes.length;
+            const melFreq = melodyNotes[idx];
+            const bassFreq = bassNotes[idx];
+
+            if (melFreq > 0) {
+              const osc = c.createOscillator();
+              const gain = c.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(melFreq, now);
+              gain.gain.setValueAtTime(0.035, now);
+              gain.gain.exponentialRampToValueAtTime(0.0008, now + 0.18);
+              osc.connect(gain);
+              gain.connect(c.destination);
+              osc.start(now);
+              osc.stop(now + 0.19);
+            }
+
+            if (bgmStep % 2 === 0 && bassFreq > 0) {
+              const bOsc = c.createOscillator();
+              const bGain = c.createGain();
+              bOsc.type = 'sine';
+              bOsc.frequency.setValueAtTime(bassFreq, now);
+              bGain.gain.setValueAtTime(0.045, now);
+              bGain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+              bOsc.connect(bGain);
+              bGain.connect(c.destination);
+              bOsc.start(now);
+              bOsc.stop(now + 0.34);
+            }
+
+            bgmStep++;
+          } catch (innerErr) {}
+        }, 220);
+      } catch (e) {}
+    }
+
+    function stopBGM() {
+      try {
+        bgmPlaying = false;
+        if (bgmInterval) {
+          clearInterval(bgmInterval);
+          bgmInterval = null;
+        }
+      } catch (e) {}
+    }
+
+    function playSound(type) {
+      try {
+        if (!soundEnabled) return;
+        const ctx = getAudioContext();
+        if (!ctx) return;
+
+        const now = ctx.currentTime;
+        if (type === 'click') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(560, now);
+          osc.frequency.exponentialRampToValueAtTime(760, now + 0.055);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.065);
+        } else if (type === 'select') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(660, now + 0.08);
+          gain.gain.setValueAtTime(0.16, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.09);
+        } else if (type === 'correct') {
+          const notes = [523.25, 659.25, 783.99, 1046.5];
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.065);
+            gain.gain.setValueAtTime(0.18, now + idx * 0.065);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.065 + 0.22);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.065);
+            osc.stop(now + idx * 0.065 + 0.24);
+          });
+        } else if (type === 'wrong') {
+          const notes = [310, 235];
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.11);
+            gain.gain.setValueAtTime(0.12, now + idx * 0.11);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.11 + 0.22);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.11);
+            osc.stop(now + idx * 0.11 + 0.24);
+          });
+        } else if (type === 'finish') {
+          const chord = [523.25, 659.25, 783.99, 1046.5, 1318.5];
+          chord.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.09);
+            gain.gain.setValueAtTime(0.16, now + idx * 0.09);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.45);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.09);
+            osc.stop(now + idx * 0.09 + 0.48);
+          });
+        }
+      } catch (e) {}
+    }
+
+    function toggleMusic() {
+      try {
+        bgmEnabled = !bgmEnabled;
+        const icon = document.getElementById('icon-bgm');
+        const label = document.getElementById('label-bgm');
+        playSound('click');
+
+        if (bgmEnabled) {
+          if (icon) icon.className = 'fa-solid fa-music text-teal-400 text-sm';
+          if (label) {
+            label.textContent = 'Musik: ON';
+            label.className = 'text-[11px] font-bold hidden sm:inline text-teal-300';
+          }
+          const quizVisible = !document.getElementById('screen-quiz').classList.contains('hidden');
+          if (quizVisible) startBGM();
+        } else {
+          if (icon) icon.className = 'fa-solid fa-volume-off text-slate-500 text-sm';
+          if (label) {
+            label.textContent = 'Musik: OFF';
+            label.className = 'text-[11px] font-bold hidden sm:inline text-slate-500';
+          }
+          stopBGM();
+        }
+      } catch (e) {}
+    }
+
+    function toggleSfx() {
+      try {
+        soundEnabled = !soundEnabled;
+        const icon = document.getElementById('icon-sound');
+        const label = document.getElementById('label-sfx');
+        if (soundEnabled) {
+          if (icon) icon.className = 'fa-solid fa-volume-high text-indigo-400 text-sm';
+          if (label) {
+            label.textContent = 'SFX: ON';
+            label.className = 'text-[11px] font-bold hidden sm:inline text-indigo-300';
+          }
+          playSound('click');
+        } else {
+          if (icon) icon.className = 'fa-solid fa-volume-xmark text-slate-500 text-sm';
+          if (label) {
+            label.textContent = 'SFX: OFF';
+            label.className = 'text-[11px] font-bold hidden sm:inline text-slate-500';
+          }
+        }
+      } catch (e) {}
+    }
+
+    /**
+     * 3. QUIZ STATE & CORE LOGIC
+     */
+    let activeQuestions = [];
+    let currentIndex = 0;
+    let userResponses = {};
+    let instantFeedbackMode = true;
+    let currentQuestionLocked = false;
+
+    let streak = 0;
+    let bestStreak = 0;
+    let totalPoints = 0;
+    let elapsedSeconds = 0;
+    let timerInterval = null;
+    let currentReviewFilter = 'all';
+
+    const OPTION_BADGE_STYLES = {
+      A: "bg-indigo-500/20 text-indigo-300 border-indigo-500/40 group-hover:bg-indigo-500 group-hover:text-white",
+      B: "bg-teal-500/20 text-teal-300 border-teal-500/40 group-hover:bg-teal-500 group-hover:text-slate-950",
+      C: "bg-amber-500/20 text-amber-300 border-amber-500/40 group-hover:bg-amber-500 group-hover:text-slate-950",
+      D: "bg-purple-500/20 text-purple-300 border-purple-500/40 group-hover:bg-purple-500 group-hover:text-white",
+      E: "bg-rose-500/20 text-rose-300 border-rose-500/40 group-hover:bg-rose-500 group-hover:text-white"
+    };
+
+    function startQuiz() {
+      playSound('click');
+
+      const feedbackToggle = document.getElementById('toggle-instant-feedback');
+      const shuffleToggle = document.getElementById('toggle-shuffle');
+      instantFeedbackMode = feedbackToggle ? feedbackToggle.checked : true;
+      const shouldShuffle = shuffleToggle ? shuffleToggle.checked : false;
+
+      activeQuestions = [...MASTER_QUESTIONS];
+      if (shouldShuffle) {
+        for (let i = activeQuestions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [activeQuestions[i], activeQuestions[j]] = [activeQuestions[j], activeQuestions[i]];
+        }
+      }
+
+      currentIndex = 0;
+      userResponses = {};
+      streak = 0;
+      bestStreak = 0;
+      totalPoints = 0;
+      elapsedSeconds = 0;
+
+      // Switch screens & show sticky bottom dock
+      document.getElementById('screen-start').classList.add('hidden');
+      document.getElementById('screen-results').classList.add('hidden');
+      document.getElementById('screen-quiz').classList.remove('hidden');
+
+      const bottomDock = document.getElementById('quiz-bottom-dock');
+      if (bottomDock) bottomDock.classList.remove('dock-hidden');
+
+      const statsPill = document.getElementById('header-quiz-stats');
+      if (statsPill) {
+        statsPill.classList.remove('hidden');
+        statsPill.classList.add('flex');
+      }
+
+      updateLiveStatsUI();
+      startTimer();
+      startBGM();
+      renderCurrentQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        elapsedSeconds++;
+        const el = document.getElementById('live-timer');
+        if (el) el.textContent = formatTime(elapsedSeconds);
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function updateLiveStatsUI() {
+      const elStreak = document.getElementById('live-streak');
+      const elPoints = document.getElementById('live-points');
+      const elTimer = document.getElementById('live-timer');
+      if (elStreak) elStreak.textContent = streak;
+      if (elPoints) elPoints.textContent = totalPoints.toLocaleString('id-ID');
+      if (elTimer) elTimer.textContent = formatTime(elapsedSeconds);
+    }
+
+    function renderCurrentQuestion() {
+      currentQuestionLocked = false;
+      const q = activeQuestions[currentIndex];
+      const total = activeQuestions.length;
+      const num = currentIndex + 1;
+      const pct = Math.round((num / total) * 100);
+
+      document.getElementById('quiz-q-counter').textContent = `Soal ${num} / ${total}`;
+      document.getElementById('quiz-topic-text').textContent = q.topic;
+      document.getElementById('quiz-progress-pct').textContent = `${pct}% Selesai`;
+      document.getElementById('quiz-progress-bar').style.width = `${(num / total) * 100}%`;
+
+      const wrapper = document.getElementById('question-card-wrapper');
+      wrapper.classList.remove('animate-question-in');
+      void wrapper.offsetWidth;
+      wrapper.classList.add('animate-question-in');
+
+      document.getElementById('quiz-question-content').innerHTML = q.questionHtml;
+
+      const optionsContainer = document.getElementById('quiz-options-list');
+      optionsContainer.innerHTML = '';
+
+      ['A', 'B', 'C', 'D', 'E'].forEach(letter => {
+        const optionText = q.options[letter];
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.id = `option-btn-${letter}`;
+        btn.className = `option-card group w-full text-left p-3.5 sm:p-4 rounded-2xl bg-slate-800/75 hover:bg-slate-800 border border-slate-700/90 border-b-slate-950 flex items-center justify-between gap-3.5 cursor-pointer`;
+        btn.addEventListener('click', () => selectOption(letter));
+
+        btn.innerHTML = `
+          <div class="flex items-center gap-3.5 min-w-0 flex-1">
+            <span id="option-badge-${letter}" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border font-display font-bold text-sm sm:text-base flex items-center justify-center shrink-0 transition-colors ${OPTION_BADGE_STYLES[letter]}">
+              ${letter}
+            </span>
+            <span class="text-sm sm:text-base font-medium text-slate-100 leading-snug break-words">
+              ${optionText}
+            </span>
+          </div>
+          <div id="option-status-icon-${letter}" class="shrink-0 text-lg hidden"></div>
+        `;
+
+        optionsContainer.appendChild(btn);
+      });
+
+      document.getElementById('quiz-instant-explanation').classList.add('hidden');
+
+      const banner = document.getElementById('quiz-feedback-banner');
+      banner.innerHTML = `
+        <div class="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 text-slate-400 flex items-center justify-center text-sm shrink-0">
+          <i class="fa-regular fa-hand-pointer"></i>
+        </div>
+        <div class="truncate">
+          <div class="font-display font-bold text-xs sm:text-sm text-slate-300 truncate">Pilih Jawaban (A–E)</div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Klik salah satu opsi di atas untuk lanjut ke soal berikutnya</p>
+        </div>
+      `;
+
+      const nextBtn = document.getElementById('btn-next-question');
+      nextBtn.disabled = true;
+      nextBtn.className = "px-5 sm:px-7 py-3 sm:py-3.5 rounded-2xl font-display font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 shrink-0 transition-all bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed";
+
+      const nextBtnText = document.getElementById('btn-next-text');
+      const nextBtnIcon = document.getElementById('btn-next-icon');
+      if (currentIndex === total - 1) {
+        nextBtnText.textContent = 'Lihat Hasil Akhir';
+        nextBtnIcon.className = 'fa-solid fa-trophy';
+      } else {
+        nextBtnText.textContent = 'Soal Berikutnya';
+        nextBtnIcon.className = 'fa-solid fa-arrow-right';
+      }
+    }
+
+    function selectOption(letter) {
+      const q = activeQuestions[currentIndex];
+      if (!q) return;
+
+      if (instantFeedbackMode && currentQuestionLocked) {
+        return;
+      }
+
+      userResponses[q.id] = letter;
+
+      if (instantFeedbackMode) {
+        currentQuestionLocked = true;
+        const isCorrect = letter === q.answer;
+
+        playSound('click');
+        if (isCorrect) {
+          streak++;
+          if (streak > bestStreak) bestStreak = streak;
+          totalPoints += 100 + (streak * 15);
+          setTimeout(() => playSound('correct'), 65);
+        } else {
+          streak = 0;
+          setTimeout(() => playSound('wrong'), 65);
+        }
+        updateLiveStatsUI();
+
+        ['A', 'B', 'C', 'D', 'E'].forEach(opt => {
+          const btn = document.getElementById(`option-btn-${opt}`);
+          const badge = document.getElementById(`option-badge-${opt}`);
+          const statusIcon = document.getElementById(`option-status-icon-${opt}`);
+          if (!btn || !badge || !statusIcon) return;
+
+          btn.disabled = true;
+          btn.classList.remove('hover:bg-slate-800', 'cursor-pointer');
+          btn.classList.add('cursor-default');
+
+          if (opt === q.answer) {
+            btn.className = `option-card w-full text-left p-3.5 sm:p-4 rounded-2xl bg-emerald-500/15 border-2 border-emerald-500 flex items-center justify-between gap-3.5 cursor-default shadow-lg shadow-emerald-950/30`;
+            badge.className = `w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-500 text-slate-950 font-display font-extrabold text-sm sm:text-base flex items-center justify-center shrink-0`;
+            statusIcon.innerHTML = `<span class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 text-xs font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Kunci</span>`;
+            statusIcon.classList.remove('hidden');
+          } else if (opt === letter && !isCorrect) {
+            btn.className = `option-card w-full text-left p-3.5 sm:p-4 rounded-2xl bg-rose-500/15 border-2 border-rose-500 flex items-center justify-between gap-3.5 cursor-default`;
+            badge.className = `w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-rose-500 text-white font-display font-extrabold text-sm sm:text-base flex items-center justify-center shrink-0`;
+            statusIcon.innerHTML = `<span class="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 text-xs font-bold flex items-center gap-1"><i class="fa-solid fa-circle-xmark"></i> Pilihanmu</span>`;
+            statusIcon.classList.remove('hidden');
+          } else {
+            btn.classList.add('opacity-45');
+          }
+        });
+
+        const banner = document.getElementById('quiz-feedback-banner');
+        if (isCorrect) {
+          banner.innerHTML = `
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-lg shrink-0">
+              <i class="fa-solid fa-check-double"></i>
+            </div>
+            <div class="min-w-0">
+              <div class="font-display font-bold text-xs sm:text-base text-emerald-400 truncate">Jawaban Kamu Benar! 🎉</div>
+              <p class="text-[11px] sm:text-xs text-slate-300 truncate">Pilihan <strong>${letter}</strong> tepat sesuai kunci.</p>
+            </div>
+          `;
+        } else {
+          banner.innerHTML = `
+            <div class="w-10 h-10 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center text-lg shrink-0">
+              <i class="fa-solid fa-xmark"></i>
+            </div>
+            <div class="min-w-0">
+              <div class="font-display font-bold text-xs sm:text-base text-rose-400 truncate">Kurang Tepat! (Kunci: ${q.answer})</div>
+              <p class="text-[11px] sm:text-xs text-slate-300 truncate">Jawabanmu <strong>${letter}</strong>, kunci benar <strong class="text-emerald-400">${q.answer}</strong>.</p>
+            </div>
+          `;
+        }
+
+        document.getElementById('quiz-instant-explanation-text').innerHTML = q.explanation;
+        document.getElementById('quiz-instant-explanation').classList.remove('hidden');
+      } else {
+        playSound('select');
+        ['A', 'B', 'C', 'D', 'E'].forEach(opt => {
+          const btn = document.getElementById(`option-btn-${opt}`);
+          const badge = document.getElementById(`option-badge-${opt}`);
+          const statusIcon = document.getElementById(`option-status-icon-${opt}`);
+          if (!btn || !badge || !statusIcon) return;
+
+          if (opt === letter) {
+            btn.className = `option-card w-full text-left p-3.5 sm:p-4 rounded-2xl bg-indigo-600/20 border-2 border-indigo-500 flex items-center justify-between gap-3.5 cursor-pointer shadow-lg shadow-indigo-950/40`;
+            badge.className = `w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-500 text-white font-display font-extrabold text-sm sm:text-base flex items-center justify-center shrink-0`;
+            statusIcon.innerHTML = `<span class="px-2.5 py-1 rounded-lg bg-indigo-500/25 text-indigo-300 text-xs font-bold flex items-center gap-1"><i class="fa-solid fa-check"></i> Dipilih</span>`;
+            statusIcon.classList.remove('hidden');
+          } else {
+            btn.className = `option-card group w-full text-left p-3.5 sm:p-4 rounded-2xl bg-slate-800/75 hover:bg-slate-800 border border-slate-700/90 border-b-slate-950 flex items-center justify-between gap-3.5 cursor-pointer`;
+            badge.className = `w-9 h-9 sm:w-10 sm:h-10 rounded-xl border font-display font-bold text-sm sm:text-base flex items-center justify-center shrink-0 transition-colors ${OPTION_BADGE_STYLES[opt]}`;
+            statusIcon.classList.add('hidden');
+          }
+        });
+
+        const banner = document.getElementById('quiz-feedback-banner');
+        banner.innerHTML = `
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 flex items-center justify-center text-base shrink-0">
+            <i class="fa-solid fa-circle-dot"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="font-display font-bold text-xs sm:text-base text-white truncate">Opsi ${letter} Dipilih</div>
+            <p class="text-[11px] sm:text-xs text-slate-400 truncate">Klik tombol <strong>Soal Berikutnya</strong> di kanan untuk lanjut.</p>
+          </div>
+        `;
+      }
+
+      const nextBtn = document.getElementById('btn-next-question');
+      nextBtn.disabled = false;
+      nextBtn.className = "btn-3d-next px-6 sm:px-8 py-3 sm:py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-extrabold text-sm sm:text-base flex items-center justify-center gap-2.5 shrink-0 cursor-pointer";
+    }
+
+    function nextQuestion() {
+      const q = activeQuestions[currentIndex];
+      if (!q || !userResponses[q.id]) return;
+
+      if (!instantFeedbackMode) {
+        if (userResponses[q.id] === q.answer) {
+          streak++;
+          if (streak > bestStreak) bestStreak = streak;
+          totalPoints += 100 + (streak * 15);
+        } else {
+          streak = 0;
+        }
+        updateLiveStatsUI();
+      }
+
+      playSound('click');
+
+      if (currentIndex < activeQuestions.length - 1) {
+        currentIndex++;
+        renderCurrentQuestion();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function finishQuiz() {
+      stopTimer();
+      stopBGM();
+      playSound('finish');
+
+      document.getElementById('screen-quiz').classList.add('hidden');
+      document.getElementById('header-quiz-stats').classList.add('hidden');
+      document.getElementById('quiz-bottom-dock').classList.add('dock-hidden');
+      document.getElementById('screen-results').classList.remove('hidden');
+
+      let correctCount = 0;
+      let wrongCount = 0;
+
+      MASTER_QUESTIONS.forEach(q => {
+        if (userResponses[q.id] === q.answer) {
+          correctCount++;
+        } else {
+          wrongCount++;
+        }
+      });
+
+      const total = MASTER_QUESTIONS.length;
+      const finalScore = Math.round((correctCount / total) * 100);
+
+      document.getElementById('final-score-number').textContent = finalScore;
+      document.getElementById('final-accuracy-label').textContent = `Akurasi ${finalScore}%`;
+      document.getElementById('stat-correct-count').textContent = `${correctCount} / ${total}`;
+      document.getElementById('stat-wrong-count').textContent = `${wrongCount} / ${total}`;
+      document.getElementById('stat-best-streak').textContent = bestStreak;
+      document.getElementById('stat-total-time').textContent = formatTime(elapsedSeconds);
+
+      document.getElementById('filter-count-wrong').textContent = wrongCount;
+      document.getElementById('filter-count-correct').textContent = correctCount;
+
+      const circle = document.getElementById('score-ring-circle');
+      const circumference = 326.7;
+      const offset = circumference - (finalScore / 100) * circumference;
+      setTimeout(() => {
+        if (circle) circle.style.strokeDashoffset = offset;
+      }, 100);
+
+      const predBadge = document.getElementById('result-predicate-badge');
+      const subMsg = document.getElementById('result-subtitle-msg');
+      if (finalScore >= 85) {
+        predBadge.className = "inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs sm:text-sm font-bold mb-3";
+        predBadge.innerHTML = `<i class="fa-solid fa-crown text-amber-400"></i> <span>Predikat A • Sangat Memuaskan!</span>`;
+        subMsg.textContent = `Luar biasa! Kamu berhasil menjawab ${correctCount} dari 23 soal Kimia Fase E dengan tepat. Pertahankan penguasaan konsep kimiamu!`;
+        launchConfetti();
+      } else if (finalScore >= 70) {
+        predBadge.className = "inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-teal-500/15 border border-teal-500/30 text-teal-300 text-xs sm:text-sm font-bold mb-3";
+        predBadge.innerHTML = `<i class="fa-solid fa-medal text-teal-400"></i> <span>Predikat B • Baik & Kompeten</span>`;
+        subMsg.textContent = `Kerja bagus! Kamu menjawab benar ${correctCount} dari 23 soal. Pelajari kembali beberapa soal yang masih keliru pada daftar pembahasan di bawah.`;
+        launchConfetti();
+      } else if (finalScore >= 55) {
+        predBadge.className = "inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs sm:text-sm font-bold mb-3";
+        predBadge.innerHTML = `<i class="fa-solid fa-bolt text-amber-400"></i> <span>Predikat C • Cukup, Terus Berlatih!</span>`;
+        subMsg.textContent = `Kamu menjawab benar ${correctCount} dari 23 soal. Yuk simak pembahasan lengkap di bawah agar makin siap menghadapi Penilaian Akhir!`;
+      } else {
+        predBadge.className = "inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs sm:text-sm font-bold mb-3";
+        predBadge.innerHTML = `<i class="fa-solid fa-book-medical text-rose-400"></i> <span>Perlu Evaluasi & Latihan Ulang</span>`;
+        subMsg.textContent = `Jangan menyerah! Baca setiap pembahasan soal di bawah ini dengan saksama, lalu coba ulangi quiz untuk menguji peningkatanmu.`;
+      }
+
+      filterReview('all');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function filterReview(filterType) {
+      playSound('click');
+      currentReviewFilter = filterType;
+
+      ['all', 'wrong', 'correct'].forEach(type => {
+        const btn = document.getElementById(`filter-btn-${type}`);
+        if (!btn) return;
+        if (type === filterType) {
+          btn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow";
+        } else {
+          btn.className = "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-300 hover:text-white";
+        }
+      });
+
+      const container = document.getElementById('review-list-container');
+      container.innerHTML = '';
+
+      const filtered = MASTER_QUESTIONS.filter(q => {
+        const isCorrect = userResponses[q.id] === q.answer;
+        if (filterType === 'correct') return isCorrect;
+        if (filterType === 'wrong') return !isCorrect;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 rounded-3xl bg-slate-900/70 border border-slate-800 text-center">
+            <div class="w-12 h-12 rounded-2xl bg-slate-800 text-slate-400 flex items-center justify-center mx-auto mb-3 text-xl">
+              <i class="fa-solid fa-filter-circle-xmark"></i>
+            </div>
+            <p class="font-display font-bold text-base text-white">Tidak ada soal pada kategori filter ini.</p>
+            <p class="text-xs text-slate-400 mt-1">Silakan pilih tab filter lainnya untuk melihat daftar soal.</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(q => {
+        const userPick = userResponses[q.id] || '-';
+        const isCorrect = userPick === q.answer;
+
+        const statusBadge = isCorrect
+          ? `<span class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-extrabold flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> BENAR</span>`
+          : `<span class="px-3 py-1 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-extrabold flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark"></i> SALAH</span>`;
+
+        let optionsHtml = '';
+        ['A', 'B', 'C', 'D', 'E'].forEach(letter => {
+          const text = q.options[letter];
+          const isKey = letter === q.answer;
+          const isUser = letter === userPick;
+
+          let rowStyle = "bg-slate-950/50 border-slate-800/80 text-slate-300";
+          let letterBadgeStyle = "bg-slate-800 text-slate-300 border-slate-700";
+          let rightTag = "";
+
+          if (isKey && isUser) {
+            rowStyle = "bg-emerald-500/15 border-emerald-500/60 text-white font-semibold";
+            letterBadgeStyle = "bg-emerald-500 text-slate-950 border-emerald-400 font-extrabold";
+            rightTag = `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-emerald-500/25 text-emerald-300 shrink-0"><i class="fa-solid fa-check mr-1"></i>Jawaban Kita & Kunci</span>`;
+          } else if (isKey) {
+            rowStyle = "bg-emerald-500/10 border-emerald-500/50 text-emerald-100 font-semibold";
+            letterBadgeStyle = "bg-emerald-500 text-slate-950 border-emerald-400 font-extrabold";
+            rightTag = `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 shrink-0"><i class="fa-solid fa-key mr-1"></i>Kunci Jawaban</span>`;
+          } else if (isUser && !isCorrect) {
+            rowStyle = "bg-rose-500/15 border-rose-500/60 text-rose-100 font-semibold";
+            letterBadgeStyle = "bg-rose-500 text-white border-rose-400 font-extrabold";
+            rightTag = `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-rose-500/25 text-rose-300 shrink-0"><i class="fa-solid fa-xmark mr-1"></i>Jawaban Kita</span>`;
+          }
+
+          optionsHtml += `
+            <div class="p-3 rounded-xl border ${rowStyle} flex items-center justify-between gap-3 text-xs sm:text-sm">
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="w-7 h-7 rounded-lg border ${letterBadgeStyle} flex items-center justify-center text-xs shrink-0">${letter}</span>
+                <span class="leading-snug break-words">${text}</span>
+              </div>
+              ${rightTag}
+            </div>
+          `;
+        });
+
+        const card = document.createElement('div');
+        card.className = `rounded-3xl bg-slate-900/90 border ${isCorrect ? 'border-emerald-500/30' : 'border-rose-500/35'} p-5 sm:p-7 shadow-xl`;
+        card.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-4 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 rounded-xl bg-slate-800 text-white font-display font-bold text-xs sm:text-sm">
+                Soal #${q.id}
+              </span>
+              <span class="px-3 py-1 rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-semibold">
+                ${q.topic}
+              </span>
+            </div>
+            ${statusBadge}
+          </div>
+
+          <div class="text-sm sm:text-base text-slate-100 font-medium leading-relaxed space-y-2 mb-5">
+            ${q.questionHtml}
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            <div class="p-3.5 rounded-2xl border ${isCorrect ? 'bg-emerald-950/30 border-emerald-500/40' : 'bg-rose-950/30 border-rose-500/40'}">
+              <div class="text-[11px] uppercase tracking-wider font-bold ${isCorrect ? 'text-emerald-400' : 'text-rose-400'} mb-1 flex items-center gap-1.5">
+                <i class="fa-solid ${isCorrect ? 'fa-user-check' : 'fa-user-xmark'}"></i>
+                <span>Jawaban Kita (${userPick}) — ${isCorrect ? 'BENAR' : 'SALAH'}</span>
+              </div>
+              <div class="text-xs sm:text-sm text-white font-semibold leading-snug">
+                ${q.options[userPick] || 'Tidak dijawab'}
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-emerald-950/30 border border-emerald-500/40">
+              <div class="text-[11px] uppercase tracking-wider font-bold text-emerald-400 mb-1 flex items-center gap-1.5">
+                <i class="fa-solid fa-check-circle"></i>
+                <span>Kunci Jawaban Benar (${q.answer})</span>
+              </div>
+              <div class="text-xs sm:text-sm text-white font-semibold leading-snug">
+                ${q.options[q.answer]}
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2 mb-5">
+            ${optionsHtml}
+          </div>
+
+          <div class="p-4 rounded-2xl bg-indigo-950/30 border border-indigo-500/30 text-xs sm:text-sm text-slate-200 leading-relaxed">
+            <div class="font-bold text-indigo-300 mb-1 flex items-center gap-1.5">
+              <i class="fa-solid fa-graduation-cap"></i>
+              <span>Pembahasan Soal #${q.id}:</span>
+            </div>
+            <div>${q.explanation}</div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function restartQuiz() {
+      stopConfetti();
+      startQuiz();
+    }
+
+    function confirmReturnHome() {
+      playSound('click');
+      const quizVisible = !document.getElementById('screen-quiz').classList.contains('hidden');
+      if (quizVisible) {
+        const modal = document.getElementById('modal-confirm-home');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } else {
+        resetToHomeScreen();
+      }
+    }
+
+    function closeConfirmModal() {
+      playSound('click');
+      const modal = document.getElementById('modal-confirm-home');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function resetToHomeScreen() {
+      closeConfirmModal();
+      stopTimer();
+      stopBGM();
+      stopConfetti();
+      document.getElementById('screen-quiz').classList.add('hidden');
+      document.getElementById('screen-results').classList.add('hidden');
+      document.getElementById('header-quiz-stats').classList.add('hidden');
+      document.getElementById('quiz-bottom-dock').classList.add('dock-hidden');
+      document.getElementById('screen-start').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /**
+     * 4. EXPOSE GLOBAL FUNCTIONS & ATTACH DIRECT EVENT LISTENERS
+     */
+    window.startQuiz = startQuiz;
+    window.selectOption = selectOption;
+    window.nextQuestion = nextQuestion;
+    window.restartQuiz = restartQuiz;
+    window.toggleMusic = toggleMusic;
+    window.toggleBGM = toggleMusic;
+    window.toggleSfx = toggleSfx;
+    window.toggleSound = toggleSfx;
+    window.filterReview = filterReview;
+    window.setReviewFilter = filterReview;
+    window.confirmReturnHome = confirmReturnHome;
+    window.closeConfirmModal = closeConfirmModal;
+    window.resetToHomeScreen = resetToHomeScreen;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Ensure dock is hidden on initial load
+      const dock = document.getElementById('quiz-bottom-dock');
+      if (dock) dock.classList.add('dock-hidden');
+
+      // Direct click listener for checkboxes & links for tactile SFX
+      document.querySelectorAll('input[type="checkbox"], a').forEach(el => {
+        el.addEventListener('click', () => playSound('click'));
+      });
+    });
+
+    /**
+     * 5. KEYBOARD SHORTCUTS SUPPORT (A-E / 1-5 to select, Enter/Space for Next)
+     */
+    window.addEventListener('keydown', (e) => {
+      const quizVisible = !document.getElementById('screen-quiz').classList.contains('hidden');
+      const modalVisible = !document.getElementById('modal-confirm-home').classList.contains('hidden');
+      if (!quizVisible || modalVisible) return;
+
+      const key = e.key.toUpperCase();
+      const mapNumToLetter = { '1': 'A', '2': 'B', '3': 'C', '4': 'D', '5': 'E' };
+
+      if (['A', 'B', 'C', 'D', 'E'].includes(key)) {
+        e.preventDefault();
+        selectOption(key);
+      } else if (mapNumToLetter[key]) {
+        e.preventDefault();
+        selectOption(mapNumToLetter[key]);
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        const q = activeQuestions[currentIndex];
+        if (q && userResponses[q.id]) {
+          e.preventDefault();
+          nextQuestion();
+        }
+      }
+    });
+
+    /**
+     * 6. CONFETTI CELEBRATION EFFECT
+     */
+    let confettiAnimId = null;
+    function launchConfetti() {
+      try {
+        const canvas = document.getElementById('confetti-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        canvas.classList.remove('hidden');
+
+        const colors = ['#6366f1', '#14b8a6', '#f59e0b', '#ec4899', '#10b981', '#a855f7'];
+        const pieces = Array.from({ length: 85 }, () => ({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height,
+          w: 7 + Math.random() * 6,
+          h: 10 + Math.random() * 8,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vy: 2.2 + Math.random() * 3.5,
+          vx: -1.5 + Math.random() * 3,
+          angle: Math.random() * Math.PI * 2,
+          vAngle: -0.08 + Math.random() * 0.16
+        }));
+
+        let frames = 0;
+        function draw() {
+          frames++;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          pieces.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.angle += p.vAngle;
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+          
